@@ -23,6 +23,7 @@ jobs:
       - name: Display working directory
         run: |
           pwd
+          java -version
 
       - name: Set up Python and cache dependencies
         uses: actions/setup-python@v5
