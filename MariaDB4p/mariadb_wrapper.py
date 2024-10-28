@@ -20,7 +20,7 @@ class MariaDBWrapper:
         :param base_dir: Base directory for MariaDB data. If not provided, a temporary directory is used.
         """
         self.port = port
-        install_jdk_if_missing(target_version=jdk_version, install_dir=jdk_install_dir)
+        self.jvm_dir=install_jdk_if_missing(target_version=jdk_version, install_dir=jdk_install_dir)
         self.jdk_version=jdk_version
         download_maria4j_jars()
         if base_dir is None:
@@ -30,14 +30,15 @@ class MariaDBWrapper:
         else:
             self.base_dir = base_dir
         self.db = None
+        self.jars_dir=jars_dir
 
         # Initialize JPype
         if not jpype.isJVMStarted():
-            self.start_jvm(jars_dir)
+            self.start_jvm(self.jvm_dir, classpath =jars_dir)
 
     def restart_jvm(self):
         self.stop_jvm()
-        self.start_jvm()
+        self.start_jvm(self.jvm_dir,  classpath =self.jars_dir)
        
 
     def start_jvm(self, jars_dir=Path(__file__).parent.parent / 'mariadb4j_jars'):
@@ -45,7 +46,7 @@ class MariaDBWrapper:
         Start the JVM with the required classpath.
         """
         # Path to all JAR files in the mariadb4j_jars directory
-        install_jdk_if_missing(target_version=self.jdk_version)  
+        
         
         jars_dir=str(jars_dir)
         logger.info(f"Starting JVM with classpath: {jars_dir}/*")
