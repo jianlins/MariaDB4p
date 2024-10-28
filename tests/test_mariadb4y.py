@@ -13,7 +13,7 @@ def test_download_maria4j_jars():
 
 def test_start_server():
     # Test case 2: Starting the MariaDB server
-    wrapper = MariaDBWrapper()
+    wrapper = MariaDBWrapper(jdk_install_dir='.jdk')
     wrapper.start_server()
     time.sleep(5)
     assert (wrapper.db is not None)

@@ -12,7 +12,7 @@ from MariaDB4p.download_jars import download_maria4j_jars
 from MariaDB4p.check_jdk import install_jdk_if_missing, is_jdk_installed
 
 class MariaDBWrapper:
-    def __init__(self, port=3306, base_dir=None, jars_dir=Path(__file__).parent.parent / 'mariadb4j_jars', jdk_version=17):
+    def __init__(self, port=3306, base_dir=None, jars_dir=Path(__file__).parent.parent / 'mariadb4j_jars', jdk_version=17, jdk_install_dir=''):
         """
         Initialize the MariaDBWrapper.
 
@@ -20,7 +20,7 @@ class MariaDBWrapper:
         :param base_dir: Base directory for MariaDB data. If not provided, a temporary directory is used.
         """
         self.port = port
-        install_jdk_if_missing(target_version=jdk_version)
+        install_jdk_if_missing(target_version=jdk_version, install_dir=jdk_install_dir)
         self.jdk_version=jdk_version
         download_maria4j_jars()
         if base_dir is None:
