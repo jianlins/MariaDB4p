@@ -104,6 +104,9 @@ def parse_pom(pom_path, properties):
                 logger.warning("Dependency missing groupId or artifactId. Skipping.")
                 continue
 
+            if 'junit' in group_id_element or 'junit' in artifact_id_element or 'maven' in artifact_id_element:
+                continue
+
             group_id = resolve_properties(group_id_element.text, properties)
             artifact_id = resolve_properties(artifact_id_element.text, properties)
 

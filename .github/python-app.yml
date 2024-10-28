@@ -1,0 +1,46 @@
+name: manual_test
+
+on:
+  workflow_dispatch
+
+jobs:
+
+  test:
+  
+    # TODO: Do we care if this only runs on allowed branches since we check push/pull_request above?
+    #if: github.ref == 'refs/heads/master' OR github.ref == 'refs/heads/develop'
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: [3.10]
+        # python-version: [3.8, 3.9, "3.10.x", "3.11.x"]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Git clone repo and remove source code
+      run: |
+        pwd
+
+    - name: Set up pip
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}   
+        cache: 'pip'   
+        cache-dependency-path: |
+          'requirements.txt'
+          
+
+    - name: install 
+      run: |
+        python --version
+        pip install --upgrade pip
+        pip install .
+        pip install pytest PyMySQL
+
+    - name: run tests
+      run: |
+        pytest 
+    
+        
