@@ -30,7 +30,7 @@ def is_jdk_installed(target_version=17):
     current_dir=Path(__file__).parent    
     logger.debug(f'current_dir:{current_dir}')
     if Path(current_dir, 'path.config').exists():
-        logger.debug(f'Found path.config: {str(Path(path.config))}')
+        logger.debug(f'Found path.config: {str( Path(current_dir, 'path.config'))}')
         java_exe=Path(Path(current_dir,'path.config').read_text().strip())
         path_config=java_exe.parent.parent
         logger.debug(f'jvm has been installed at: {path_config}')
