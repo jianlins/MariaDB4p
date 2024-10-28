@@ -67,7 +67,8 @@ def install_jdk_if_missing(target_version=17, install_dir=''):
             # Install JDK 17 from Adoptium
             install_dir=jdk.install('17', vendor='adoptium', path=install_dir)
             logger.info(f"JDK installed successfully to {install_dir}.")
-            logger.info('No environmental variables have been configured. To uninstall, you can simply remove the directory.')
+            os.environ['JAVA_HOME']=install_dir
+            logger.info('No permanent environmental variables have been configured. To uninstall, you can simply remove the directory.')
             Path(current_dir, 'path.config').write_text(str(Path(install_dir,'bin','java')))
         except Exception as e:
             tb_str = traceback.format_exc()

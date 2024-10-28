@@ -54,7 +54,7 @@ class MariaDBWrapper:
         jars_dir=str(jars_dir)
         logger.info(f"Starting JVM with classpath: {jars_dir}/*")
         try:
-            jpype.startJVM(self.jvm_dir, classpath=[f'{jars_dir}/*'])
+            jpype.startJVM(classpath=[f'{jars_dir}/*'])
             logger.info("JVM started successfully.")
         except Exception as e:
             logger.error(f"Failed to start JVM: {e}")
