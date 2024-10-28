@@ -35,8 +35,8 @@ jobs:
       - name: install os lib
         if: matrix.os == 'ubuntu-latest'
         run: |
-          apt-get update
-          apt-get install -y libncurses5  
+          sudo apt-get update
+          sudo apt-get install -y libncurses5  
 
       - name: Set up Python and cache dependencies
         uses: actions/setup-python@v5
