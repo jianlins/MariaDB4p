@@ -21,6 +21,7 @@ class MariaDBWrapper:
         """
         self.port = port
         install_jdk_if_missing(target_version=jdk_version)
+        self.jdk_version=jdk_version
         download_maria4j_jars()
         if base_dir is None:
             tmp_base=Path(Path.home(), 'mariadb4j_data')
@@ -44,9 +45,7 @@ class MariaDBWrapper:
         Start the JVM with the required classpath.
         """
         # Path to all JAR files in the mariadb4j_jars directory
-        if not is_jdk_installed():
-            logger.error("JDK is not installed. Please install JDK to use MariaDB4j.")
-            sys.exit(1)   
+        install_jdk_if_missing(target_version=self.jdk_version)  
         
         jars_dir=str(jars_dir)
         logger.info(f"Starting JVM with classpath: {jars_dir}/*")
