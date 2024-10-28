@@ -31,7 +31,13 @@ jobs:
           distribution: 'adopt'       # You can choose 'temurin', 'zulu', etc.
           java-version: '17'          # Specify your desired JDK version
           cache: 'maven'     
-          
+      
+      - name: install os lib
+        if os == 'ubuntu-latest':
+        run: |
+          apt-get update
+          apt-get install -y libncurses5  
+
       - name: Set up Python and cache dependencies
         uses: actions/setup-python@v5
         with:
