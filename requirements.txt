@@ -1,0 +1,4 @@
+JPype1
+install-jdk
+requests
+loguru
