@@ -32,8 +32,8 @@ jobs:
             requirements.txt
 
       - name: Install dependencies
+        shell: bash
         run: |
-          set -e
           python --version
           pip install --upgrade pip
           pip install .
