@@ -250,8 +250,12 @@ def download_artifact(group_id, artifact_id, version, dependencies_dir=DEPENDENC
         download_artifact(module_group_id, module_artifact_id, module_version)
 
 
-def download_maria4j_jars(pom_file=Path(mariadb4y_root,'MariaDB4j','pom.xml'), dependencies_dir=DEPENDENCIES_DIR):
+def download_maria4j_jars(pom_file=Path(mariadb4y_root,'MariaDB4j','pom.xml'), dependencies_dir=DEPENDENCIES_DIR, force_redownload=False):
+    import traceback
     properties = {} 
+    if Path(dependencies_dir, 'download_complete.log').exists() and not force_redownload:
+        logger.info(f"Dependencies already downloaded. Skipping download.")
+        return True
     if pom_file is not None and pom_file.exists():    
         logger.info(f'load dependency configurations from {pom_file}')    
         initial_dependencies=parse_pom(pom_file, properties)
@@ -262,9 +266,13 @@ def download_maria4j_jars(pom_file=Path(mariadb4y_root,'MariaDB4j','pom.xml'), d
         ]
     # Start downloading
     processed=set()
-    for group_id, artifact_id, version in initial_dependencies:
-        logger.info(f'Try download: {group_id}, {artifact_id}, {version}')
-        download_artifact(group_id, artifact_id, version, dependencies_dir=dependencies_dir, processed=processed)
-
+    try:
+        for group_id, artifact_id, version in initial_dependencies:
+            logger.info(f'Try download: {group_id}, {artifact_id}, {version}')
+            download_artifact(group_id, artifact_id, version, dependencies_dir=dependencies_dir, processed=processed)
+    except Exception as e:
+        logger.error(f"Error downloading dependencies: {traceback.format_exc()}")
+        return False
     logger.info("All dependencies downloaded.")
-    return 'All dependencies downloaded.'
+    Path(dependencies_dir, 'download_complete.log').write_text('completed')
+    return True

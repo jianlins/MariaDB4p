@@ -7,7 +7,9 @@ import time
 from pathlib import Path
 import pymysql
 from loguru import logger
-from .check_jdk import is_jdk_installed
+
+from MariaDB4p.download_jars import download_maria4j_jars
+from MariaDB4p.check_jdk import install_jdk_if_missing, is_jdk_installed
 
 class MariaDBWrapper:
     def __init__(self, port=3306, base_dir=None, jars_dir=Path(__file__).parent.parent / 'mariadb4j_jars'):
@@ -18,6 +20,8 @@ class MariaDBWrapper:
         :param base_dir: Base directory for MariaDB data. If not provided, a temporary directory is used.
         """
         self.port = port
+        install_jdk_if_missing()
+        download_maria4j_jars()
         if base_dir is None:
             tmp_base=Path(Path.home(), 'mariadb4j_data')
             tmp_base.mkdir(exist_ok=True,parents=True)
@@ -30,6 +34,9 @@ class MariaDBWrapper:
         if not jpype.isJVMStarted():
             self.start_jvm(jars_dir)
 
+    def restart_jvm(self):
+        self.stop_jvm()
+        self.start_jvm()
        
 
     def start_jvm(self, jars_dir=Path(__file__).parent.parent / 'mariadb4j_jars'):
