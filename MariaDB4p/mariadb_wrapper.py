@@ -37,11 +37,11 @@ class MariaDBWrapper:
 
         # Initialize JPype
         if not jpype.isJVMStarted():
-            self.start_jvm(self.jvm_dir)
+            self.start_jvm(self.jars_dir)
 
     def restart_jvm(self):
         self.stop_jvm()
-        self.start_jvm(self.jvm_dir)
+        self.start_jvm(self.jars_dir)
        
 
     def start_jvm(self, jars_dir=Path(__file__).parent.parent / 'mariadb4j_jars'):
