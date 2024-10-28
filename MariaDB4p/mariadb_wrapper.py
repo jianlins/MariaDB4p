@@ -34,11 +34,11 @@ class MariaDBWrapper:
 
         # Initialize JPype
         if not jpype.isJVMStarted():
-            self.start_jvm(self.jvm_dir, classpath =jars_dir)
+            self.start_jvm(self.jvm_dir)
 
     def restart_jvm(self):
         self.stop_jvm()
-        self.start_jvm(self.jvm_dir,  classpath =self.jars_dir)
+        self.start_jvm(self.jvm_dir)
        
 
     def start_jvm(self, jars_dir=Path(__file__).parent.parent / 'mariadb4j_jars'):
@@ -51,7 +51,7 @@ class MariaDBWrapper:
         jars_dir=str(jars_dir)
         logger.info(f"Starting JVM with classpath: {jars_dir}/*")
         try:
-            jpype.startJVM(classpath=[f'{jars_dir}/*'])
+            jpype.startJVM(self.jvm_dir, classpath=[f'{jars_dir}/*'])
             logger.info("JVM started successfully.")
         except Exception as e:
             logger.error(f"Failed to start JVM: {e}")
