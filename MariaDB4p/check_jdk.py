@@ -29,7 +29,16 @@ def is_jdk_installed(target_version=17):
     """
     current_dir=Path(__file__).parent    
     logger.debug(f'current_dir:{current_dir}')
-    if get_jdk_version()==target_version:
+    if Path(current_dir, 'path.config').exists():
+        logger.debug(f'Found path.config: {str(Path(path.config))}')
+        java_exe=Path(Path(current_dir,'path.config').read_text().strip())
+        path_config=java_exe.parent.parent
+        logger.debug(f'jvm has been installed at: {path_config}')
+        if path_config.exists() and get_jdk_version(java_exe)==target_version:
+            logger.info(f'jdk has been installed to: {str(path_config)}')
+            os.environ['JAVA_HOME']=str(path_config)
+            return java_exe
+    elif get_jdk_version()==target_version:
         return 'java'
     elif 'JAVA_HOME'  in os.environ and len(os.environ['JAVA_HOME'])>0:
         logger.info(f"jdk has been installed to:{os.environ['JAVA_HOME']}")
@@ -37,14 +46,7 @@ def is_jdk_installed(target_version=17):
             java_exe=str(Path(os.environ['JAVA_HOME'],'bin','java'))
             if get_jdk_version(java_exe)==target_version:
                 Path(current_dir, 'path.config').write_text(java_exe)
-                return str(Path(os.environ['JAVA_HOME'], 'bin','java'))
-    elif Path(current_dir, 'path.config').exists():
-        java_exe=Path(Path(current_dir,'path.config').read_text().strip())
-        path_config=java_exe.parent.parent
-        if path_config.exists() and get_jdk_version(java_exe)==target_version:
-            logger.info(f'jdk has been installed to: {str(path_config)}')
-            os.environ['JAVA_HOME']=str(path_config)
-            return java_exe
+                return str(Path(os.environ['JAVA_HOME'], 'bin','java'))     
 
     logger.info(f"JDK{target_version} is not installed.")
     return None
