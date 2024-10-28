@@ -12,7 +12,7 @@ from MariaDB4p.download_jars import download_maria4j_jars
 from MariaDB4p.check_jdk import install_jdk_if_missing, is_jdk_installed
 
 class MariaDBWrapper:
-    def __init__(self, port=3306, base_dir=None, jars_dir=Path(__file__).parent.parent / 'mariadb4j_jars'):
+    def __init__(self, port=3306, base_dir=None, jars_dir=Path(__file__).parent.parent / 'mariadb4j_jars', jdk_version=17):
         """
         Initialize the MariaDBWrapper.
 
@@ -20,7 +20,7 @@ class MariaDBWrapper:
         :param base_dir: Base directory for MariaDB data. If not provided, a temporary directory is used.
         """
         self.port = port
-        install_jdk_if_missing()
+        install_jdk_if_missing(target_version=jdk_version)
         download_maria4j_jars()
         if base_dir is None:
             tmp_base=Path(Path.home(), 'mariadb4j_data')
@@ -44,7 +44,9 @@ class MariaDBWrapper:
         Start the JVM with the required classpath.
         """
         # Path to all JAR files in the mariadb4j_jars directory
-        install_jdk_if_missing(17)  
+        if not is_jdk_installed():
+            logger.error("JDK is not installed. Please install JDK to use MariaDB4j.")
+            sys.exit(1)   
         
         jars_dir=str(jars_dir)
         logger.info(f"Starting JVM with classpath: {jars_dir}/*")
