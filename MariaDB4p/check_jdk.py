@@ -4,7 +4,7 @@ import subprocess
 import os
 from pathlib import Path
 from loguru import logger
-
+import traceback
 def get_jdk_version(executable='java'):
     """
     Returns the installed JDK version or None if JDK is not installed.
@@ -66,7 +66,8 @@ def install_jdk_if_missing(target_version=17):
             logger.info('No environmental variables have been configured. To uninstall, you can simply remove the directory.')
             Path(current_dir, 'path.config').write_text(str(Path(install_dir,'bin','java')))
         except Exception as e:
-            logger.error(f"Failed to install JDK: {install_dir}")
+            tb_str = traceback.format_exc()
+            logger.error(f"Failed to install JDK: {install_dir}\n {str(e)}\nTraceback:\n{tb_str}")            
             sys.exit(1)
     else:
         logger.info("Skipping JDK installation.")
