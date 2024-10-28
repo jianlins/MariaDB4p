@@ -44,9 +44,7 @@ class MariaDBWrapper:
         Start the JVM with the required classpath.
         """
         # Path to all JAR files in the mariadb4j_jars directory
-        if not is_jdk_installed():
-            logger.error("JDK is not installed. Please install JDK to use MariaDB4j.")
-            sys.exit(1)        
+        install_jdk_if_missing(17)  
         
         jars_dir=str(jars_dir)
         logger.info(f"Starting JVM with classpath: {jars_dir}/*")
