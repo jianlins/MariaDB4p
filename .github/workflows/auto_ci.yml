@@ -1,7 +1,6 @@
 name: auto_ci
 
 on:
-  workflow_dispatch
   push:
     branches:
       - main 
