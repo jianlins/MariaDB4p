@@ -29,9 +29,8 @@ def is_jdk_installed(target_version=17):
     """
     current_dir=Path(__file__).parent    
     logger.debug(f'current_dir:{current_dir}')
-    if is_jdk_inpath():
-        if get_jdk_version()==target_version:
-            return 'java'
+    if get_jdk_version()==target_version:
+        return 'java'
     elif 'JAVA_HOME'  in os.environ and len(os.environ['JAVA_HOME'])>0:
         logger.info(f"jdk has been installed to:{os.environ['JAVA_HOME']}")
         if not Path(current_dir, 'path.config').exists():
@@ -42,33 +41,24 @@ def is_jdk_installed(target_version=17):
     elif Path(current_dir, 'path.config').exists():
         java_exe=Path(Path(current_dir,'path.config').read_text().strip())
         path_config=java_exe.parent.parent
-        if path_config.exists():                         
+        if path_config.exists() and get_jdk_version(java_exe)==target_version:
             logger.info(f'jdk has been installed to: {str(path_config)}')
             os.environ['JAVA_HOME']=str(path_config)
             return java_exe
 
     logger.info(f"JDK{target_version} is not installed.")
-    return False
+    return None
     
-def is_jdk_inpath():
-    try:
-        result = subprocess.run(['java', '-version'], capture_output=True, text=True)
-        if result.returncode == 0:
-            logger.info("JDK is already installed.")
-            return True        
-    except FileNotFoundError:
-        logger.info("JDK has not been found in system path.")
-        return False
 
 
-def install_jdk_if_missing():
+def install_jdk_if_missing(target_version=17):
     """
     Install JDK using the 'install-jdk' package if it's not already installed.
     """
     install_dir=''
     current_dir=Path(__file__).parent
-    if not is_jdk_installed():
-        logger.info("Installing JDK...")
+    if is_jdk_installed(target_version) is None:
+        logger.info(f"Installing JDK {target_version}...")
         try:
             # Install JDK 17 from Adoptium
             install_dir=jdk.install('17', vendor='adoptium', path=str(Path.home() / '.jdks'))
