@@ -51,17 +51,19 @@ def is_jdk_installed(target_version=17):
     
 
 
-def install_jdk_if_missing(target_version=17):
+def install_jdk_if_missing(target_version=17, install_dir=''):
     """
     Install JDK using the 'install-jdk' package if it's not already installed.
     """
-    install_dir=''
+    
     current_dir=Path(__file__).parent
+    if install_dir is None or install_dir=='':
+        install_dir=str(current_dir / '.jdks')
     if is_jdk_installed(target_version) is None:
         logger.info(f"Installing JDK {target_version}...")
         try:
             # Install JDK 17 from Adoptium
-            install_dir=jdk.install('17', vendor='adoptium', path=str(current_dir / '.jdks'))
+            install_dir=jdk.install('17', vendor='adoptium', path=install_dir)
             logger.info(f"JDK installed successfully to {install_dir}.")
             logger.info('No environmental variables have been configured. To uninstall, you can simply remove the directory.')
             Path(current_dir, 'path.config').write_text(str(Path(install_dir,'bin','java')))
