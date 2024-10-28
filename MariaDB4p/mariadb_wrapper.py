@@ -20,6 +20,7 @@ class MariaDBWrapper:
         :param base_dir: Base directory for MariaDB data. If not provided, a temporary directory is used.
         """
         self.port = port
+        print('getDefaultJVMPath', jpype.getDefaultJVMPath())
         self.jvm_dir=install_jdk_if_missing(target_version=jdk_version, install_dir=jdk_install_dir)
         self.jdk_version=jdk_version
         download_maria4j_jars()
