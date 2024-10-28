@@ -256,6 +256,8 @@ def download_maria4j_jars(pom_file=Path(mariadb4y_root,'MariaDB4j','pom.xml'), d
     if Path(dependencies_dir, 'download_complete.log').exists() and not force_redownload:
         logger.info(f"Dependencies already downloaded. Skipping download.")
         return True
+    if not Path(dependencies_dir).exists():
+        Path(dependencies_dir).mkdir(parents=True)
     if pom_file is not None and pom_file.exists():    
         logger.info(f'load dependency configurations from {pom_file}')    
         initial_dependencies=parse_pom(pom_file, properties)

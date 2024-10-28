@@ -81,6 +81,7 @@ class MariaDBWrapper:
         except Exception as e:
             logger.error(f"Failed to start MariaDB server: {e}")
             sys.exit(1)
+        return True
 
     def stop_server(self):
         """
