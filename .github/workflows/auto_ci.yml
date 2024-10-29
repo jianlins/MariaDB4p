@@ -12,7 +12,8 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+      # let's disable macos for now, it seems the mariadb4j has issues with macos
+        os: [ubuntu-latest,windows-latest]
         python-version: ["3.10"]
       fail-fast: false
     runs-on: ${{ matrix.os }}
